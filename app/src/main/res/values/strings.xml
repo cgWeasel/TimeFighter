@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TimeFighter</string>
+    <string name="button_start">Tab To Start</string>
+    <string name="button_action">Hit Me!</string>
+</resources>
