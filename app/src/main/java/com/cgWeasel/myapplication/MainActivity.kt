@@ -3,8 +3,8 @@ package com.cgWeasel.myapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.PersistableBundle
 import android.util.Log
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.d(TAG, "onCreate is called. Score is: $score")
 
         hitMeButton = findViewById(R.id.hitMeButton)
         textScore = findViewById(R.id.textScoreView)
@@ -48,7 +47,10 @@ class MainActivity : AppCompatActivity() {
             resetGame()
         }
 
+
         hitMeButton.setOnClickListener {view ->
+            val bounceButton = AnimationUtils.loadAnimation(this, R.anim.bounce_tap)
+            view.startAnimation(bounceButton)
             incrementScore()
         }
     }
