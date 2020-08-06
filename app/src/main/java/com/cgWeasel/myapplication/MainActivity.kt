@@ -1,20 +1,27 @@
 package com.cgWeasel.myapplication
 
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.marginBottom
+import androidx.core.view.marginStart
 import kotlinx.android.synthetic.main.activity_main.*
+
+fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 class MainActivity : AppCompatActivity() {
 
     internal lateinit var hitMeButton: Button
     internal lateinit var textScore: TextView
     internal lateinit var textTime: TextView
+    internal lateinit var bFrame: FrameLayout
 
     internal var score = 0
 
@@ -38,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         hitMeButton = findViewById(R.id.hitMeButton)
         textScore = findViewById(R.id.textScoreView)
         textTime = findViewById(R.id.textTimeView)
+        bFrame = findViewById(R.id.buttonFrame)
 
         if (savedInstanceState != null){
             score = savedInstanceState.getInt(SCORE_KEY)
@@ -47,12 +55,26 @@ class MainActivity : AppCompatActivity() {
             resetGame()
         }
 
-
         hitMeButton.setOnClickListener {view ->
-            val bounceButton = AnimationUtils.loadAnimation(this, R.anim.bounce_tap)
-            view.startAnimation(bounceButton)
+            getNewPosition()
             incrementScore()
         }
+    }
+
+    fun getNewPosition() {
+        val frameWidth = bFrame.width
+        val frameHeight = bFrame.height
+        val bHeight = hitMeButton.height
+
+        val frameMin = bHeight/2
+        val frameMaxX = frameWidth-bHeight-32
+        val frameMaxY = frameHeight-bHeight-32
+
+        val randomPositionX : Int = (frameMin..frameMaxX).random()
+        val randomPositionY : Int = (frameMin..frameMaxY).random()
+
+        hitMeButton.translationX = randomPositionX.toFloat()
+        hitMeButton.translationY = randomPositionY.toFloat()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -129,5 +151,9 @@ class MainActivity : AppCompatActivity() {
         score += 1
         val newScore = getString(R.string.yourScore, score)
         textScoreView.text = newScore
+    }
+
+    private fun randomPosition() {
+
     }
 }
