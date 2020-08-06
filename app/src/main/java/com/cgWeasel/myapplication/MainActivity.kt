@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     internal var gameStarted =  false
 
     internal lateinit var countDownTimer: CountDownTimer
-    internal val initialCountDown: Long = 6000
+    internal val initialCountDown: Long = 60000
     internal val countDownInterval: Long = 1000
     internal var timeLeftOnTimer: Long = 60000
 
@@ -78,6 +78,14 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(SCORE_KEY, score)
+        outState.putLong(TIME_LEFT_KEY, timeLeftOnTimer)
+        countDownTimer.cancel()
+    }
+
     private fun showInfo(){
         val dialogTitle = getString(R.string.appTitle, BuildConfig.VERSION_NAME)
         val dialogMessage = getString(R.string.aboutInfo)
@@ -98,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         builder.create().show()
     }
 
-    fun getNewPosition() {
+    private fun getNewPosition() {
         val frameWidth = bFrame.width
         val frameHeight = bFrame.height
         val bHeight = hitMeButton.height
@@ -112,18 +120,6 @@ class MainActivity : AppCompatActivity() {
 
         hitMeButton.translationX = randomPositionX.toFloat()
         hitMeButton.translationY = randomPositionY.toFloat()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putInt(SCORE_KEY, score)
-        outState.putLong(TIME_LEFT_KEY, timeLeftOnTimer)
-        countDownTimer.cancel()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     private fun restoreGame(){
@@ -186,9 +182,5 @@ class MainActivity : AppCompatActivity() {
         textScoreView.text = newScore
         val blink = AnimationUtils.loadAnimation(this, R.anim.score)
         textScoreView.startAnimation(blink)
-    }
-
-    private fun randomPosition() {
-
     }
 }
