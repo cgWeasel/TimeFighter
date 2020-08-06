@@ -4,5 +4,10 @@
     <string name="button_action">Hit Me!</string>
     <string name="timeLeft">Seconds left: %1$d</string>
     <string name="yourScore">Your Score: %1$d</string>
+    <string name="scoreTitle">Time is Over!</string>
+    <string name="finalScore">Your Final Score is %1$d</string>
     <string name="gameOverMessage">Time is up. Your Score is %1$d.</string>
+    <string name="menuAbout">About</string>
+    <string name="appTitle">Time Figher</string>
+    <string name="aboutInfo">Created by cgWeasel</string>
 </resources>

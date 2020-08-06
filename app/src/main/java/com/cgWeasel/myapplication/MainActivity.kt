@@ -1,15 +1,19 @@
 package com.cgWeasel.myapplication
 
 import android.content.res.Resources
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.marginBottom
 import androidx.core.view.marginStart
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     internal var gameStarted =  false
 
     internal lateinit var countDownTimer: CountDownTimer
-    internal val initialCountDown: Long = 60000
+    internal val initialCountDown: Long = 6000
     internal val countDownInterval: Long = 1000
     internal var timeLeftOnTimer: Long = 60000
 
@@ -61,6 +65,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menuInfo) {
+            showInfo()
+        }
+        return true
+    }
+
+    private fun showInfo(){
+        val dialogTitle = getString(R.string.appTitle, BuildConfig.VERSION_NAME)
+        val dialogMessage = getString(R.string.aboutInfo)
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(dialogTitle)
+        builder.setMessage(dialogMessage)
+        builder.create().show()
+    }
+
+    private fun showFinalScore(){
+        val dialogTitle = getString(R.string.scoreTitle)
+        val dialogMessage = getString(R.string.finalScore, score)
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(dialogTitle)
+        builder.setMessage(dialogMessage)
+        builder.create().show()
+    }
+
     fun getNewPosition() {
         val frameWidth = bFrame.width
         val frameHeight = bFrame.height
@@ -83,14 +120,10 @@ class MainActivity : AppCompatActivity() {
         outState.putInt(SCORE_KEY, score)
         outState.putLong(TIME_LEFT_KEY, timeLeftOnTimer)
         countDownTimer.cancel()
-
-        Log.d(TAG, "Saving Score: $score and Time Left: $timeLeftOnTimer")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
-        Log.d(TAG, "onDestroy called!")
     }
 
     private fun restoreGame(){
@@ -138,7 +171,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun gameOver() {
-        Toast.makeText(this, getString(R.string.gameOverMessage, score), Toast.LENGTH_LONG).show()
+        showFinalScore()
         resetGame()
     }
 
@@ -151,6 +184,8 @@ class MainActivity : AppCompatActivity() {
         score += 1
         val newScore = getString(R.string.yourScore, score)
         textScoreView.text = newScore
+        val blink = AnimationUtils.loadAnimation(this, R.anim.score)
+        textScoreView.startAnimation(blink)
     }
 
     private fun randomPosition() {
