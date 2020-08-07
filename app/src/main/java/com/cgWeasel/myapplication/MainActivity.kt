@@ -8,6 +8,8 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.FrameLayout
@@ -59,10 +61,18 @@ class MainActivity : AppCompatActivity() {
             resetGame()
         }
 
-        hitMeButton.setOnClickListener {view ->
-            getNewPosition()
-            incrementScore()
-        }
+        hitMeButton.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                when (event?.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        getNewPosition()
+                        incrementScore()
+                    }
+                }
+                return v?.onTouchEvent(event) ?: true
+            }
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
