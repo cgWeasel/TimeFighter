@@ -1,11 +1,10 @@
 package com.cgWeasel.myapplication
 
+import android.content.DialogInterface
 import android.content.res.Resources
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -14,10 +13,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.marginBottom
-import androidx.core.view.marginStart
 import kotlinx.android.synthetic.main.activity_main.*
 
 fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
@@ -97,7 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showInfo(){
-        val dialogTitle = getString(R.string.appTitle, BuildConfig.VERSION_NAME)
+        val dialogTitle = getString(R.string.appTitle)
         val dialogMessage = getString(R.string.aboutInfo)
 
         val builder = AlertDialog.Builder(this)
@@ -113,6 +109,11 @@ class MainActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(dialogTitle)
         builder.setMessage(dialogMessage)
+        builder.setCancelable(false)
+        builder.setNeutralButton("OK"){dialogInterface, i ->
+            resetGame()
+            dialogInterface.dismiss()
+        }
         builder.create().show()
     }
 
@@ -146,7 +147,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                gameOver()
+                showFinalScore()
             }
         }
         gameStarted = true
@@ -169,16 +170,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                gameOver()
+                showFinalScore()
             }
         }
 
         gameStarted = false
-    }
-
-    private fun gameOver() {
-        showFinalScore()
-        resetGame()
     }
 
     private fun incrementScore() {
